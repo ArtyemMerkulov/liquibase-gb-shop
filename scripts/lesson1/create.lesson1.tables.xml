@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd">
+
+    <changeSet id="before_create_extension.uuid-ossp" author="merkulov.artem" context="postgresql" labels="uuid-ossp">
+        <tagDatabase tag="before_create_extension_uuid-ossp"/>
+    </changeSet>
+
+    <changeSet id="create_uuid-ossp_extension" author="merkulov.artem" context="postgresql" labels="uuid-ossp">
+        <sql>CREATE EXTENSION IF NOT EXISTS "uuid-ossp"</sql>
+    </changeSet>
+
+    <changeSet id="before_create_table.ACCOUNT_USER" author="merkulov.artem" context="postgresql" labels="account_user">
+        <tagDatabase tag="before_create_table_account_user"/>
+    </changeSet>
+
+    <changeSet id="create_table_account_user" author="merkulov.artem" context="postgresql" labels="account_user">
+        <createTable tableName="ACCOUNT_USER" remarks="Учетная запись пользователя">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" remarks="УИД записи">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)" remarks="Логин пользователя">
+                <constraints nullable="false" unique="true" uniqueConstraintName="account_user_username__UNQ"/>
+            </column>
+            <column name="password" type="VARCHAR(255)" remarks="Пароль">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)" remarks="Электронная почта">
+                <constraints nullable="false" unique="true" uniqueConstraintName="account_user_email__UNQ"/>
+            </column>
+            <column name="firstname" type="VARCHAR(255)" defaultValue="" defaultOnNull="true"
+                    remarks="Имя пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastname" type="VARCHAR(255)" defaultValue="" defaultOnNull="true"
+                    remarks="Фамилия пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACCOUNT_NON_EXPIRED" type="BOOLEAN" defaultValue="false" defaultOnNull="true"
+                    remarks="Флаг истечения срока действия учетной записи">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACCOUNT_NON_LOCKED" type="BOOLEAN" defaultValue="false" defaultOnNull="true"
+                    remarks="Флаг блокировки учетной записи">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREDENTIALS_NON_EXPIRED" type="BOOLEAN" defaultValue="false" defaultOnNull="true"
+                    remarks="Флаг истечения срока действия учетных данных пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN" defaultValue="false" defaultOnNull="true"
+                    remarks="Флаг активности учетной записи">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="ACCOUNT_USER" indexName="account_user_username__idx">
+            <column name="username"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="before_create_table.ACCOUNT_ROLE" author="merkulov.artem" context="postgresql" labels="account_role">
+        <tagDatabase tag="before_create_table_account_role"/>
+    </changeSet>
+
+    <changeSet id="create_table_account_role" author="merkulov.artem" context="postgresql" labels="account_role">
+        <createTable tableName="ACCOUNT_ROLE" remarks="Роль учетной записи пользователя">
+            <column name="id" type="SMALLSERIAL" autoIncrement="true" remarks="УИД записи">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)" remarks="Название роли">
+                <constraints nullable="false" unique="true" uniqueConstraintName="account_role_name__UNQ"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="before_create_table.USER_ROLE" author="merkulov.artem" context="postgresql" labels="user_role">
+        <tagDatabase tag="before_create_table_user_role"/>
+    </changeSet>
+
+    <changeSet id="create_table_user_role" author="merkulov.artem" context="postgresql" labels="user_role">
+        <createTable tableName="USER_ROLE" remarks="Соответствие ролей учетных записей пользователей учетным записям пользователей">
+            <column name="user_id" type="UUID" remarks="УИД учетной записи пользователя">
+                <constraints nullable="false" referencedTableName="ACCOUNT_USER" referencedColumnNames="id"
+                             foreignKeyName="user_role_account_user__FK" deleteCascade="true"/>
+            </column>
+            <column name="role_id" type="SMALLSERIAL" remarks="УИД роли учетной записи пользователя">
+                <constraints nullable="false" referencedTableName="ACCOUNT_ROLE" referencedColumnNames="id"
+                             foreignKeyName="user_role_account_role__FK" deleteCascade="true"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="USER_ROLE" columnNames="user_id, role_id"/>
+    </changeSet>
+
+    <changeSet id="before_create_table.AUTHORITY" author="merkulov.artem" context="postgresql" labels="authority">
+        <tagDatabase tag="before_create_table_authority"/>
+    </changeSet>
+
+    <changeSet id="create_table_authority" author="merkulov.artem" context="postgresql" labels="authority">
+        <createTable tableName="AUTHORITY" remarks="Права">
+            <column name="id" type="SERIAL" autoIncrement="true" remarks="УИД записи">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="permission" type="VARCHAR(255)" remarks="Наименование права">
+                <constraints nullable="false" unique="true" uniqueConstraintName="authority_permission__UNQ"/>
+            </column>
+        </createTable>
+        <createIndex tableName="AUTHORITY" indexName="authority_permission__idx">
+            <column name="permission"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="before_create_table.ROLE_AUTHORITY" author="merkulov.artem" context="postgresql" labels="role_authority">
+        <tagDatabase tag="before_create_table_role_authority"/>
+    </changeSet>
+
+    <changeSet id="create_table_role_authority" author="merkulov.artem" context="postgresql" labels="role_authority">
+        <createTable tableName="ROLE_AUTHORITY" remarks="Соответствие ролей учетных записей пользователей правам">
+            <column name="role_id" type="SMALLSERIAL" remarks="УИД роли учетной записи пользователя">
+                <constraints nullable="false" referencedTableName="ACCOUNT_ROLE" referencedColumnNames="id"
+                             foreignKeyName="role_authority_account_role__FK" deleteCascade="true"/>
+            </column>
+            <column name="authority_id" type="SERIAL" remarks="УИД права">
+                <constraints nullable="false" referencedTableName="AUTHORITY" referencedColumnNames="id"
+                             foreignKeyName="role_authority_authority__FK" deleteCascade="true"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="ROLE_AUTHORITY" columnNames="role_id, authority_id"/>
+    </changeSet>
+
+</databaseChangeLog>
