@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd">
+
+    <changeSet id="before_create_table.MANUFACTURER" author="merkulov.artem" context="postgresql" labels="manufacturer">
+        <tagDatabase tag="before_create_table_manufacturer"/>
+    </changeSet>
+
+    <changeSet id="create_table.MANUFACTURER" author="merkulov.artem" context="postgresql" labels="manufacturer">
+        <createTable tableName="MANUFACTURER">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" remarks="УИД записи">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)" remarks="Наименование производителя">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="version" type="INT" defaultValue="0" remarks="Версия">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)" remarks="Логин пользователя, кем создана запись">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" remarks="Время создания записи">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(255)" remarks="Логин пользователя, кем изменена запись">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="TIMESTAMP" remarks="Время последнего изменения записи">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="before_create_table.PRODUCT" author="merkulov.artem" context="postgresql" labels="product">
+        <tagDatabase tag="before_create_table_product"/>
+    </changeSet>
+
+    <changeSet id="create_table.PRODUCT" author="merkulov.artem" context="postgresql" labels="product">
+        <createTable tableName="PRODUCT">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" remarks="УИД записи">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)" remarks="Наименование продукта">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost" type="MONEY">
+                <constraints nullable="false"/>
+            </column>
+            <column name="manufacturer_id" type="UUID">
+                <constraints nullable="false" referencedTableName="MANUFACTURER" referencedColumnNames="id"
+                             foreignKeyName="product_manufacturer__FK" deleteCascade="true"/>
+            </column>
+            <column name="manufacture_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT" defaultValue="0" remarks="Версия">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)" remarks="Логин пользователя, кем создана запись">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" remarks="Время создания записи">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(255)" remarks="Логин пользователя, кем изменена запись">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="TIMESTAMP" remarks="Время последнего изменения записи">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(20)" defaultValue="ACTIVE" remarks="Статус видимости">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="before_create_table.CATEGORY" author="merkulov.artem" context="postgresql" labels="category">
+        <tagDatabase tag="before_create_table_category"/>
+    </changeSet>
+
+    <changeSet id="create_table_category" author="merkulov.artem" context="postgresql" labels="category">
+        <createTable tableName="CATEGORY" remarks="Категория продуктов">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" remarks="УИД записи">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)" remarks="Наименование категории">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT" defaultValue="0" remarks="Версия">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)" remarks="Логин пользователя, кем создана запись">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" remarks="Время создания записи">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(255)" remarks="Логин пользователя, кем изменена запись">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="TIMESTAMP" remarks="Время последнего изменения записи">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="before_create_table.CATEGORY_PRODUCT" author="merkulov.artem" context="postgresql" labels="category_product">
+        <tagDatabase tag="before_create_table_category_product"/>
+    </changeSet>
+
+    <changeSet id="create_table_category_product" author="merkulov.artem" context="postgresql" labels="category_product">
+        <createTable tableName="CATEGORY_PRODUCT" remarks="Категория продукта">
+            <column name="category_id" type="UUID" remarks="УИД записи категории">
+                <constraints nullable="false" referencedTableName="CATEGORY" referencedColumnNames="id"
+                             foreignKeyName="category_product_category__FK" deleteCascade="true"/>
+            </column>
+            <column name="product_id" type="UUID" remarks="УИД записи продукта">
+                <constraints nullable="false" referencedTableName="PRODUCT" referencedColumnNames="id"
+                             foreignKeyName="category_product_product__FK" deleteCascade="true"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="CATEGORY_PRODUCT" columnNames="category_id, product_id"/>
+    </changeSet>
+
+</databaseChangeLog>

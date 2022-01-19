@@ -7,6 +7,15 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
         http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd">
 
+
+    <changeSet id="before_create_sequence.hibernate_seq" author="merkulov.artem" context="postgresql" labels="hibernate_seq">
+        <tagDatabase tag="before_create_sequence_hibernate_seq"/>
+    </changeSet>
+
+    <changeSet  id="create_hibernate_seq" author="merkulov.artem" context="postgresql" labels="hibernate_seq">
+        <sql>CREATE SEQUENCE hibernate_sequence INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 2 CACHE 1</sql>
+    </changeSet>
+
     <changeSet id="before_create_extension.uuid-ossp" author="merkulov.artem" context="postgresql" labels="uuid-ossp">
         <tagDatabase tag="before_create_extension_uuid-ossp"/>
     </changeSet>
@@ -24,8 +33,8 @@
             <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" remarks="УИД записи">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="username" type="VARCHAR(255)" remarks="Логин пользователя">
-                <constraints nullable="false" unique="true" uniqueConstraintName="account_user_username__UNQ"/>
+            <column name="user_name" type="VARCHAR(255)" remarks="Логин пользователя">
+                <constraints nullable="false" unique="true" uniqueConstraintName="account_user_user_name__UNQ"/>
             </column>
             <column name="password" type="VARCHAR(255)" remarks="Пароль">
                 <constraints nullable="false"/>
@@ -33,23 +42,23 @@
             <column name="email" type="VARCHAR(255)" remarks="Электронная почта">
                 <constraints nullable="false" unique="true" uniqueConstraintName="account_user_email__UNQ"/>
             </column>
-            <column name="firstname" type="VARCHAR(255)" defaultValue="" defaultOnNull="true"
+            <column name="first_name" type="VARCHAR(255)" defaultValue="" defaultOnNull="true"
                     remarks="Имя пользователя">
                 <constraints nullable="false"/>
             </column>
-            <column name="lastname" type="VARCHAR(255)" defaultValue="" defaultOnNull="true"
+            <column name="last_name" type="VARCHAR(255)" defaultValue="" defaultOnNull="true"
                     remarks="Фамилия пользователя">
                 <constraints nullable="false"/>
             </column>
-            <column name="ACCOUNT_NON_EXPIRED" type="BOOLEAN" defaultValue="false" defaultOnNull="true"
+            <column name="account_non_expired" type="BOOLEAN" defaultValue="false" defaultOnNull="true"
                     remarks="Флаг истечения срока действия учетной записи">
                 <constraints nullable="false"/>
             </column>
-            <column name="ACCOUNT_NON_LOCKED" type="BOOLEAN" defaultValue="false" defaultOnNull="true"
+            <column name="account_non_locked" type="BOOLEAN" defaultValue="false" defaultOnNull="true"
                     remarks="Флаг блокировки учетной записи">
                 <constraints nullable="false"/>
             </column>
-            <column name="CREDENTIALS_NON_EXPIRED" type="BOOLEAN" defaultValue="false" defaultOnNull="true"
+            <column name="credentials_non_expired" type="BOOLEAN" defaultValue="false" defaultOnNull="true"
                     remarks="Флаг истечения срока действия учетных данных пользователя">
                 <constraints nullable="false"/>
             </column>
@@ -58,8 +67,8 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createIndex tableName="ACCOUNT_USER" indexName="account_user_username__idx">
-            <column name="username"/>
+        <createIndex tableName="ACCOUNT_USER" indexName="account_user_user_name__idx">
+            <column name="user_name"/>
         </createIndex>
     </changeSet>
 
