@@ -13,7 +13,8 @@
 
     <changeSet id="create_table.MANUFACTURER" author="merkulov.artem" context="postgresql" labels="manufacturer">
         <createTable tableName="MANUFACTURER">
-            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" remarks="УИД записи">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" defaultOnNull="true"
+                    remarks="УИД записи">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="title" type="varchar(255)" remarks="Наименование производителя">
@@ -43,7 +44,8 @@
 
     <changeSet id="create_table.PRODUCT" author="merkulov.artem" context="postgresql" labels="product">
         <createTable tableName="PRODUCT">
-            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" remarks="УИД записи">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" defaultOnNull="true"
+                    remarks="УИД записи">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="title" type="VARCHAR(255)" remarks="Наименование продукта">
@@ -86,7 +88,8 @@
 
     <changeSet id="create_table_category" author="merkulov.artem" context="postgresql" labels="category">
         <createTable tableName="CATEGORY" remarks="Категория продуктов">
-            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" remarks="УИД записи">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" defaultOnNull="true"
+                    remarks="УИД записи">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="title" type="VARCHAR(255)" remarks="Наименование категории">

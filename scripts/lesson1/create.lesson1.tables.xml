@@ -30,7 +30,8 @@
 
     <changeSet id="create_table_account_user" author="merkulov.artem" context="postgresql" labels="account_user">
         <createTable tableName="ACCOUNT_USER" remarks="Учетная запись пользователя">
-            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" remarks="УИД записи">
+            <column name="id" type="UUID" defaultValueComputed="uuid_generate_v4()" defaultOnNull="true"
+                    remarks="УИД записи">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="user_name" type="VARCHAR(255)" remarks="Логин пользователя">
@@ -93,7 +94,8 @@
 
     <changeSet id="create_table_user_role" author="merkulov.artem" context="postgresql" labels="user_role">
         <createTable tableName="USER_ROLE" remarks="Соответствие ролей учетных записей пользователей учетным записям пользователей">
-            <column name="user_id" type="UUID" remarks="УИД учетной записи пользователя">
+            <column name="user_id" type="UUID" defaultValueComputed="uuid_generate_v4()" defaultOnNull="true"
+                    remarks="УИД учетной записи пользователя">
                 <constraints nullable="false" referencedTableName="ACCOUNT_USER" referencedColumnNames="id"
                              foreignKeyName="user_role_account_user__FK" deleteCascade="true"/>
             </column>
